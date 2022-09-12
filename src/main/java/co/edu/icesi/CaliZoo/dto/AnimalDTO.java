@@ -25,4 +25,6 @@ public class AnimalDTO {
     private  double height;
 
     private Date arrival_date;
+
+    private String [] parents = new String[2];
 }

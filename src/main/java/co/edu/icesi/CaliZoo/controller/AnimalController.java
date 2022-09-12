@@ -27,8 +27,24 @@ public class AnimalController implements AnimalAPI {
     }
 
     @Override
-    public AnimalDTO createAnimal(AnimalDTO userDTO) {
-        return animalMapper.fromAnimal(animalService.createAnimal(animalMapper.fromDTO(userDTO)));
+    public AnimalDTO createAnimal(AnimalDTO animalDTO) {
+        if (validateParents(animalDTO.getParents()[0], animalDTO.getParents()[1])){
+
+            if (checkName(animalDTO.getName())){
+
+                if (!validateRepeatName(animalDTO.getName())){
+
+                    if (validateDate(animalDTO.getArrival_date())){
+
+                        if (isLlama(animalDTO)){
+
+                            return animalMapper.fromAnimal(animalService.createAnimal(animalMapper.fromDTO(animalDTO)));
+                        }
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     @Override
@@ -74,11 +90,13 @@ public class AnimalController implements AnimalAPI {
         boolean check = true;
         List<Animal> list = animalService.getAnimals();
 
-        for (int i = 0; i <= list.size(); i++){
+        if (list != null && name != null){
+            for (int i = 0; i <= list.size(); i++){
 
-            if (name.equalsIgnoreCase(list.get(i).getName())){
+                if (name.equalsIgnoreCase(list.get(i).getName())){
 
-                check = false;
+                    check = false;
+                }
             }
         }
 
@@ -89,10 +107,40 @@ public class AnimalController implements AnimalAPI {
 
         boolean check = true;
         Date today = new Date();
+        if(date != null){
+            if (date.after(today)){
 
-        if (date.after(today)){
+                check = false;
+            }
+        }else{
 
-            check = false;
+        }
+        return check;
+    }
+
+    private boolean validateParents(String animalId1, String animalId2){
+
+        boolean check = false;
+        AnimalDTO a1 = getAnimal(animalId1);
+        AnimalDTO a2 = getAnimal(animalId2);
+
+        if (animalId1 != null && animalId2 != null) {
+            if (a1.getSex().equals("MALE")) {
+
+                if (a2.getSex().equals("FEMALE")) {
+
+                    check = true;
+                }
+            } else {
+
+                if (a2.getSex().equals("MALE")) {
+
+                    check = true;
+                }
+            }
+        }else {
+
+
         }
         return check;
     }

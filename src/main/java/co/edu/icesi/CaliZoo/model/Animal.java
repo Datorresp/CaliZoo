@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -37,6 +38,7 @@ public class Animal {
 
     private Date arrival_date;
 
+    private String [] parents = new String[2];
     @PrePersist
     public void generateId(){
         this.id = UUID.randomUUID();
