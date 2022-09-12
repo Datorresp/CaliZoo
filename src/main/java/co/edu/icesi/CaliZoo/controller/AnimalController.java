@@ -8,7 +8,6 @@ import co.edu.icesi.CaliZoo.service.AnimalService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -27,7 +26,7 @@ public class AnimalController implements AnimalAPI {
     }
 
     @Override
-    public AnimalDTO createAnimal(AnimalDTO animalDTO) {
+    public AnimalDTO createAnimal(AnimalDTO animalDTO) throws RuntimeException {
         if (validateParents(animalDTO.getParents()[0], animalDTO.getParents()[1])){
 
             if (checkName(animalDTO.getName())){
@@ -39,12 +38,26 @@ public class AnimalController implements AnimalAPI {
                         if (isLlama(animalDTO)){
 
                             return animalMapper.fromAnimal(animalService.createAnimal(animalMapper.fromDTO(animalDTO)));
+                        }else{
+
+                            throw new RuntimeException("Not is a Llama");
                         }
+                    }else{
+
+                        throw new RuntimeException("Arrival date must be before today");
                     }
+                }else{
+
+                    throw new RuntimeException("Name is repeat");
                 }
+            }else {
+
+                throw new RuntimeException("Name's not valid");
             }
+        }else {
+
+            throw new RuntimeException("Parents are not male and female");
         }
-        return null;
     }
 
     @Override
@@ -85,7 +98,7 @@ public class AnimalController implements AnimalAPI {
         return check;
     }
 
-    private boolean validateRepeatName(String name){
+    private boolean validateRepeatName(String name)throws RuntimeException {
 
         boolean check = true;
         List<Animal> list = animalService.getAnimals();
@@ -93,17 +106,20 @@ public class AnimalController implements AnimalAPI {
         if (list != null && name != null){
             for (int i = 0; i <= list.size(); i++){
 
-                if (name.equalsIgnoreCase(list.get(i).getName())){
+                if (name.equalsIgnoreCase(list.get(i).getName())) {
 
-                    check = false;
+                    return false;
                 }
             }
+        }else {
+
+            throw new RuntimeException("Please, write animal's name");
         }
 
         return check;
     }
 
-    private boolean validateDate(Date date){
+    private boolean validateDate(Date date)throws RuntimeException {
 
         boolean check = true;
         Date today = new Date();
@@ -114,15 +130,16 @@ public class AnimalController implements AnimalAPI {
             }
         }else{
 
+            throw new RuntimeException("When the animal has been entered?");
         }
         return check;
     }
 
-    private boolean validateParents(String animalId1, String animalId2){
+    private boolean validateParents(String animalId1, String animalId2) throws RuntimeException {
 
         boolean check = false;
-        AnimalDTO a1 = getAnimal(animalId1);
-        AnimalDTO a2 = getAnimal(animalId2);
+        AnimalDTO a1 = getAnimal(UUID.fromString(animalId1));
+        AnimalDTO a2 = getAnimal(UUID.fromString(animalId2));
 
         if (animalId1 != null && animalId2 != null) {
             if (a1.getSex().equals("MALE")) {
@@ -140,7 +157,7 @@ public class AnimalController implements AnimalAPI {
             }
         }else {
 
-
+            throw new RuntimeException("Parents doesn't exist, please introduce the parents");
         }
         return check;
     }
