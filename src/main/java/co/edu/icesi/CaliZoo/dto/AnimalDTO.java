@@ -1,9 +1,12 @@
 package co.edu.icesi.CaliZoo.dto;
 
+import co.edu.icesi.CaliZoo.model.Animal;
+import co.edu.icesi.CaliZoo.model.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.UUID;
 
@@ -16,7 +19,7 @@ public class AnimalDTO {
 
     private String name;
 
-    private String sex;
+    private Sex sex;
 
     private double weight;
 
@@ -24,7 +27,7 @@ public class AnimalDTO {
 
     private  double height;
 
-    private Date arrival_date;
+    private LocalDateTime arrival_date;
 
-    private String [] parents = new String[2];
+    private Animal[] parents = new Animal[2];
 }

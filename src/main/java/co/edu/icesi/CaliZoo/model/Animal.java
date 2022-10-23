@@ -10,12 +10,13 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 @Data
-@Table(name = "`animal`")
+@Table
 @Entity
 @Builder
 @NoArgsConstructor
@@ -28,7 +29,7 @@ public class Animal {
 
     private String name;
 
-    private String sex;
+    private Sex sex;
 
     private double weight;
 
@@ -36,17 +37,14 @@ public class Animal {
 
     private  double height;
 
-    private Date arrival_date;
+    private LocalDateTime arrival_date;
 
-    private String [] parents = new String[2];
+    private Animal [] parents = new Animal[2];
     @PrePersist
     public void generateId(){
         this.id = UUID.randomUUID();
     }
 
-    enum Sex{
 
-        MALE, FEMALE;
-    }
 
 }
